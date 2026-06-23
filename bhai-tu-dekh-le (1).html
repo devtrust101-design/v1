@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#08080a"/>
+<title>Bhai Tu Dekh Le 💀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --bg:       #08080a;
+  --bg2:      #0f0f12;
+  --bg3:      #161619;
+  --bg4:      #1e1e23;
+
+  /* Borders */
+  --b1: rgba(255,255,255,0.06);
+  --b2: rgba(255,255,255,0.10);
+  --b3: rgba(255,255,255,0.16);
+
+  /* Text */
+  --t1: #f2f2f5;
+  --t2: #9898a8;
+  --t3: #55555f;
+
+  /* Brand */
+  --green:    #1db954;
+  --green2:   #17a347;
+  --green-dim:rgba(29,185,84,0.12);
+  --purple:   #8b5cf6;
+  --purple2:  #7c3aed;
+  --purple-dim:rgba(139,92,246,0.12);
+  --pink:     #ec4899;
+  --pink-dim: rgba(236,72,153,0.12);
+  --amber:    #f59e0b;
+  --amber-dim:rgba(245,158,11,0.12);
+  --red:      #ef4444;
+  --red-dim:  rgba(239,68,68,0.12);
+  --blue:     #3b82f6;
+
+  /* Spacing */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px;
+
+  /* Radius */
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-full:999px;
+
+  /* Motion */
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ═══════════════════════════════
+   RESET & BASE
+═══════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--t1);
+  min-height:100dvh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px;}
+button,input,textarea{font-family:inherit;}
+img{display:block;max-width:100%;}
+
+/* ═══════════════════════════════
+   ONBOARDING OVERLAY
+═══════════════════════════════ */
+#onboarding{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;
+  padding:env(safe-area-inset-top,20px) 0 env(safe-area-inset-bottom,32px);
+  animation:fadeIn 0.3s ease;
+}
+.ob-slides{
+  flex:1;display:flex;width:100%;
+  overflow:hidden;position:relative;
+}
+.ob-slide{
+  min-width:100%;padding:3rem 2rem 1rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  transition:transform 0.4s var(--ease-out);
+}
+.ob-emoji{font-size:72px;margin-bottom:1.5rem;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.ob-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--t1);letter-spacing:-0.5px;line-height:1.2;margin-bottom:1rem;}
+.ob-title span{color:var(--green);}
+.ob-desc{font-size:15px;color:var(--t2);line-height:1.7;max-width:320px;}
+.ob-bottom{width:100%;padding:0 1.5rem;display:flex;flex-direction:column;gap:1rem;align-items:center;}
+.ob-dots{display:flex;gap:6px;}
+.ob-dot{width:6px;height:6px;border-radius:3px;background:var(--b3);transition:all 0.3s var(--ease-out);}
+.ob-dot.active{width:20px;background:var(--green);}
+.ob-btn{
+  width:100%;padding:16px;background:var(--green);color:#fff;border:none;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:16px;
+  border-radius:var(--r-md);cursor:pointer;
+  transition:background 0.15s,transform 0.1s;
+}
+.ob-btn:active{transform:scale(0.97);}
+.ob-skip{font-size:13px;color:var(--t3);background:none;border:none;cursor:pointer;padding:4px 12px;}
+
+/* ═══════════════════════════════
+   APP SHELL
+═══════════════════════════════ */
+#app{display:none;}
+#app.ready{display:block;}
+
+/* ═══════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(8,8,10,0.92);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--b1);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 0 8px;background:none;border:none;cursor:pointer;
+  font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.5px;
+  color:var(--t3);transition:color 0.2s;position:relative;
+}
+.nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.2s var(--ease-spring);}
+.nav-btn.active{color:var(--green);}
+.nav-btn.active svg{transform:scale(1.1);}
+.nav-indicator{
+  position:absolute;top:4px;width:20px;height:2px;
+  background:var(--green);border-radius:1px;
+  opacity:0;transform:scaleX(0);
+  transition:opacity 0.2s,transform 0.2s var(--ease-spring);
+}
+.nav-btn.active .nav-indicator{opacity:1;transform:scaleX(1);}
+.nav-badge{
+  position:absolute;top:6px;right:calc(50% - 18px);
+  width:8px;height:8px;background:var(--red);border-radius:50%;
+  border:2px solid var(--bg);display:none;
+}
+.nav-badge.show{display:block;}
+
+/* ═══════════════════════════════
+   SCREENS
+═══════════════════════════════ */
+.screen{display:none;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));min-height:100dvh;animation:screenIn 0.25s var(--ease-out);}
+.screen.active{display:block;}
+@keyframes screenIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ═══════════════════════════════
+   HEADER
+═══════════════════════════════ */
+.app-header{
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 1rem 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;
+  background:rgba(8,8,10,0.88);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--b1);z-index:50;
+}
+.app-logo{
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;
+  letter-spacing:-0.3px;color:var(--t1);
+}
+.app-logo span{color:var(--green);}
+.header-right{display:flex;align-items:center;gap:8px;}
+
+/* Streak pill in header */
+.streak-pill{
+  display:flex;align-items:center;gap:5px;
+  background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);
+  border-radius:var(--r-full);padding:5px 10px;
+  font-size:12px;font-weight:600;color:var(--amber);
+  font-family:'DM Mono',monospace;
+}
+
+/* Tries pill */
+.tries-pill{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg3);border:1px solid var(--b2);
+  border-radius:var(--r-full);padding:5px 10px;
+  font-size:12px;color:var(--t2);font-family:'DM Mono',monospace;
+}
+.tries-pill.warning{background:var(--red-dim);border-color:rgba(239,68,68,0.25);color:#fca5a5;}
+
+/* ═══════════════════════════════
+   TYPOGRAPHY UTILS
+═══════════════════════════════ */
+.label{
+  font-size:11px;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--t3);margin-bottom:var(--s2);display:block;
+  font-family:'DM Mono',monospace;
+}
+.section-title{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  color:var(--t1);letter-spacing:-0.5px;
+}
+
+/* ═══════════════════════════════
+   FORMS
+═══════════════════════════════ */
+textarea,input[type=text]{
+  width:100%;background:var(--bg3);
+  border:1.5px solid var(--b2);border-radius:var(--r-md);
+  padding:14px 16px;font-size:15px;color:var(--t1);
+  resize:none;outline:none;line-height:1.6;
+  transition:border-color 0.2s,background 0.2s;
+}
+textarea::placeholder,input::placeholder{color:var(--t3);font-size:14px;}
+textarea:focus,input:focus{border-color:var(--green);background:var(--bg4);}
+
+/* ═══════════════════════════════
+   PILLS / CHIPS
+═══════════════════════════════ */
+.chip-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.chip-row::-webkit-scrollbar{display:none;}
+.chip{
+  white-space:nowrap;padding:8px 14px;
+  border-radius:var(--r-full);border:1.5px solid var(--b2);
+  background:var(--bg3);font-size:13px;cursor:pointer;
+  color:var(--t2);transition:all 0.15s;font-family:inherit;flex-shrink:0;
+}
+.chip:hover{border-color:var(--b3);color:var(--t1);}
+.chip.active{background:var(--green-dim);border-color:rgba(29,185,84,0.4);color:var(--green);font-weight:600;}
+
+/* ═══════════════════════════════
+   PERSONALITY GRID
+═══════════════════════════════ */
+.p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.p-card{
+  background:var(--bg3);border:1.5px solid var(--b1);
+  border-radius:var(--r-md);padding:12px 10px;
+  cursor:pointer;transition:all 0.18s;text-align:center;
+  position:relative;overflow:hidden;
+}
+.p-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,var(--green-dim),transparent 60%);
+  opacity:0;transition:opacity 0.2s;
+}
+.p-card:active{transform:scale(0.95);}
+.p-card.active{border-color:rgba(29,185,84,0.4);background:var(--bg4);}
+.p-card.active::before{opacity:1;}
+.p-emoji{font-size:26px;display:block;margin-bottom:5px;}
+.p-name{font-size:11px;font-weight:600;color:var(--t1);line-height:1.3;}
+.p-check{
+  position:absolute;top:6px;right:6px;
+  width:16px;height:16px;background:var(--green);
+  border-radius:50%;display:none;align-items:center;justify-content:center;
+}
+.p-check svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:3;}
+.p-card.active .p-check{display:flex;}
+
+/* ═══════════════════════════════
+   CTA BUTTONS
+═══════════════════════════════ */
+.btn{
+  width:100%;padding:16px;border:none;border-radius:var(--r-md);
+  font-family:'Syne',sans-serif;font-weight:800;font-size:16px;
+  cursor:pointer;transition:all 0.15s;letter-spacing:-0.1px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-green{
+  background:var(--green);color:#fff;
+  box-shadow:0 0 32px rgba(29,185,84,0.25);
+}
+.btn-green:hover{background:var(--green2);box-shadow:0 0 48px rgba(29,185,84,0.4);}
+.btn-green:active{transform:scale(0.97);}
+.btn-purple{
+  background:var(--purple);color:#fff;
+  box-shadow:0 0 32px rgba(139,92,246,0.2);
+}
+.btn-purple:hover{background:var(--purple2);}
+.btn-purple:active{transform:scale(0.97);}
+.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none!important;box-shadow:none;}
+
+/* ═══════════════════════════════
+   CARDS
+═══════════════════════════════ */
+.card{
+  background:var(--bg2);border:1px solid var(--b1);
+  border-radius:var(--r-lg);padding:16px;margin-bottom:10px;
+}
+.card-title{
+  font-size:11px;font-weight:600;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--t3);margin-bottom:12px;
+  font-family:'DM Mono',monospace;display:flex;align-items:center;gap:6px;
+}
+
+/* ═══════════════════════════════
+   LOADER
+═══════════════════════════════ */
+.loader{display:none;padding:2.5rem 1rem;text-align:center;}
+.loader.visible{display:block;}
+.loader-fires{font-size:32px;animation:wiggle 0.4s infinite alternate;margin-bottom:1rem;}
+@keyframes wiggle{from{transform:rotate(-8deg) scale(1);}to{transform:rotate(8deg) scale(1.1);}}
+.loader-msg{font-family:'DM Mono',monospace;font-size:13px;color:var(--green);margin-bottom:0.5rem;min-height:20px;}
+.loader-sub{font-size:12px;color:var(--t3);}
+.loader-dots::after{content:'';animation:dots 1.2s steps(4,end) infinite;}
+@keyframes dots{0%{content:'';}25%{content:'.';}50%{content:'..';}75%{content:'...';}100%{content:'';}}
+
+/* ═══════════════════════════════
+   RESULT AREA
+═══════════════════════════════ */
+.result-area{display:none;}
+.result-area.visible{display:block;}
+
+/* Hero result card - Bhai Mode FIRST */
+.hero-result{
+  margin:0 1rem 12px;
+  background:linear-gradient(135deg,#120a1e,#0a1a0a);
+  border:1px solid rgba(139,92,246,0.25);
+  border-radius:var(--r-xl);padding:20px;
+  position:relative;overflow:hidden;
+}
+.hero-result::before{
+  content:'';position:absolute;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%);
+  top:-60px;right:-60px;border-radius:50%;pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--purple);color:#fff;
+  border-radius:var(--r-full);padding:5px 12px;
+  font-size:11px;font-weight:700;font-family:'DM Mono',monospace;
+  letter-spacing:0.5px;margin-bottom:14px;
+}
+.hero-reply-text{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  color:var(--t1);line-height:1.3;margin-bottom:12px;letter-spacing:-0.3px;
+}
+.hero-why{font-size:13px;color:#c4b5fd;line-height:1.6;margin-bottom:14px;}
+.hero-conf{display:flex;align-items:center;gap:10px;}
+.conf-track{flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.conf-fill{height:100%;background:var(--purple);border-radius:2px;width:0;transition:width 1s var(--ease-out);}
+.conf-num{font-family:'DM Mono',monospace;font-size:12px;color:#a78bfa;min-width:32px;}
+
+/* Score row - 3 metrics in a row */
+.score-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin:0 1rem 10px;
+}
+.score-tile{
+  background:var(--bg2);border:1px solid var(--b1);
+  border-radius:var(--r-lg);padding:14px 10px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.score-tile-val{
+  font-family:'Syne',sans-serif;font-size:28px;font-weight:800;
+  line-height:1;margin-bottom:3px;
+}
+.score-tile-lbl{font-size:10px;color:var(--t3);letter-spacing:0.5px;font-family:'DM Mono',monospace;text-transform:uppercase;}
+
+/* Meaning card */
+.meaning-text{font-size:15px;line-height:1.7;color:var(--t1);}
+
+/* Brutal box */
+.brutal-box{
+  background:var(--red-dim);border:1px solid rgba(239,68,68,0.2);
+  border-radius:var(--r-sm);padding:14px;
+  font-size:14px;color:#fca5a5;line-height:1.7;
+  border-left:3px solid var(--red);
+}
+
+/* Emotion chips */
+.emotion-list{display:flex;flex-direction:column;gap:8px;}
+.emotion-row{display:flex;align-items:center;gap:10px;}
+.emotion-name{font-size:13px;color:var(--t2);min-width:80px;}
+.emotion-track{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.emotion-bar{height:100%;border-radius:3px;background:var(--green);width:0;transition:width 1.1s var(--ease-out);}
+.emotion-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--t3);min-width:28px;text-align:right;}
+
+/* Risk meter */
+.risk-blocks{display:flex;gap:5px;margin-bottom:8px;}
+.risk-block{flex:1;height:8px;border-radius:4px;background:var(--bg4);transition:background 0.5s ease;}
+.risk-label{font-size:13px;font-weight:600;margin-top:4px;}
+
+/* Overthinking alert */
+.overthink-alert{
+  display:none;margin:0 1rem 10px;
+  background:var(--amber-dim);border:1px solid rgba(245,158,11,0.25);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:14px;color:#fde68a;line-height:1.6;
+  gap:10px;align-items:flex-start;
+}
+.overthink-alert.show{display:flex;}
+
+/* Reply cards */
+.reply-list{display:flex;flex-direction:column;gap:8px;}
+.reply-card{
+  background:var(--bg3);border:1.5px solid var(--b1);
+  border-radius:var(--r-md);padding:14px;
+  cursor:pointer;transition:all 0.15s;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.reply-card:hover{border-color:var(--b3);}
+.reply-card:active{transform:scale(0.97);border-color:var(--green);}
+.reply-emoji{font-size:22px;flex-shrink:0;margin-top:1px;}
+.reply-style{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:4px;font-family:'DM Mono',monospace;}
+.reply-text{font-size:14px;color:var(--t1);line-height:1.5;}
+.reply-copy-hint{font-size:11px;color:var(--green);margin-top:6px;opacity:0;transition:opacity 0.15s;}
+.reply-card:hover .reply-copy-hint{opacity:1;}
+.reply-copied{
+  display:none;font-size:11px;color:var(--green);
+  margin-top:6px;font-family:'DM Mono',monospace;font-weight:500;
+}
+
+/* Share card */
+.share-card-wrap{
+  background:linear-gradient(135deg,#0d0d18,#0a140a);
+  border:1px solid var(--b2);border-radius:var(--r-xl);
+  padding:20px;margin:0 1rem 10px;overflow:hidden;position:relative;
+}
+.share-card-wrap::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;
+}
+.sc-brand{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;position:relative;z-index:1;}
+.sc-big{font-family:'Syne',sans-serif;font-size:56px;font-weight:800;color:var(--green);line-height:1;letter-spacing:-2px;position:relative;z-index:1;}
+.sc-verdict{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--t1);margin:6px 0;position:relative;z-index:1;}
+.sc-meta-row{display:flex;gap:20px;margin-top:14px;position:relative;z-index:1;}
+.sc-meta-item{text-align:center;}
+.sc-meta-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t1);}
+.sc-meta-lbl{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;}
+.sc-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:2px;margin-top:16px;position:relative;z-index:1;}
+
+/* Share buttons */
+.share-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 1rem;}
+.share-btn{
+  flex:1;min-width:calc(50% - 4px);padding:11px 8px;
+  border-radius:var(--r-sm);border:1px solid var(--b2);
+  background:var(--bg3);font-size:12px;color:var(--t2);
+  cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.5px;
+  transition:all 0.15s;text-align:center;
+}
+.share-btn:hover{border-color:var(--b3);color:var(--t1);}
+
+/* ═══════════════════════════════
+   CHAT ANALYSIS
+═══════════════════════════════ */
+.health-big{
+  font-family:'Syne',sans-serif;font-size:72px;font-weight:900;
+  letter-spacing:-3px;line-height:1;
+}
+.flag-item{
+  display:flex;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--b1);font-size:14px;color:var(--t2);line-height:1.5;
+}
+.flag-item:last-child{border:none;}
+.flag-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+
+/* Effort bars */
+.effort-vis{display:flex;gap:4px;align-items:center;margin:10px 0;}
+.effort-side{flex:1;}
+.effort-label{font-size:11px;color:var(--t3);margin-bottom:4px;font-family:'DM Mono',monospace;letter-spacing:0.5px;text-transform:uppercase;}
+.effort-track{height:8px;background:var(--bg4);border-radius:4px;overflow:hidden;}
+.effort-fill-you{height:100%;background:var(--green);border-radius:4px;transition:width 1s var(--ease-out);}
+.effort-fill-them{height:100%;background:var(--purple);border-radius:4px;transition:width 1s var(--ease-out);}
+.effort-div{width:1px;height:40px;background:var(--b2);flex-shrink:0;}
+
+/* ═══════════════════════════════
+   STATS SCREEN
+═══════════════════════════════ */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.stat-tile{
+  background:var(--bg2);border:1px solid var(--b1);
+  border-radius:var(--r-lg);padding:16px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-tile.full{grid-column:1/-1;}
+.stat-num{
+  font-family:'Syne',sans-serif;font-size:32px;font-weight:800;
+  color:var(--green);line-height:1;
+}
+.stat-lbl{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;}
+.stat-sub{font-size:13px;color:var(--t2);margin-top:4px;line-height:1.5;}
+
+/* Weekly chart */
+.week-chart{display:flex;gap:6px;align-items:flex-end;height:60px;padding-top:4px;}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.week-bar{width:100%;background:var(--bg4);border-radius:3px 3px 0 0;transition:height 0.8s var(--ease-out);}
+.week-bar.today{background:var(--green);}
+.week-day{font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;}
+
+/* Report card */
+.report-card{
+  background:linear-gradient(135deg,rgba(29,185,84,0.05),rgba(139,92,246,0.05));
+  border:1px solid var(--b2);border-radius:var(--r-lg);padding:16px;
+}
+.report-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--t1);margin-bottom:8px;}
+.report-text{font-size:14px;color:var(--t2);line-height:1.7;}
+
+/* Reset btn */
+.btn-ghost{
+  width:100%;padding:14px;background:transparent;
+  border:1px solid var(--b2);border-radius:var(--r-md);
+  font-size:14px;color:var(--t3);cursor:pointer;
+  transition:all 0.15s;font-family:inherit;
+}
+.btn-ghost:hover{border-color:var(--red);color:var(--red);}
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+.toast{
+  position:fixed;bottom:calc(72px + env(safe-area-inset-bottom,0px) + 12px);
+  left:50%;transform:translateX(-50%) translateY(20px);
+  background:#fff;color:#111;padding:10px 18px;border-radius:var(--r-full);
+  font-size:13px;font-weight:600;z-index:999;white-space:nowrap;
+  pointer-events:none;opacity:0;transition:all 0.25s var(--ease-out);
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════════════
+   PAYWALL SHEET
+═══════════════════════════════ */
+.sheet-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  display:none;align-items:flex-end;
+  animation:fadeIn 0.2s ease;
+}
+.sheet-overlay.show{display:flex;}
+.paywall-sheet{
+  width:100%;background:var(--bg2);
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
+  border-top:1px solid var(--b2);
+  animation:slideUp 0.3s var(--ease-out);
+}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.paywall-handle{width:36px;height:4px;background:var(--b3);border-radius:2px;margin:0 auto 20px;}
+.paywall-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--t1);letter-spacing:-0.5px;margin-bottom:8px;}
+.paywall-sub{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:20px;}
+.countdown{
+  font-family:'DM Mono',monospace;font-size:32px;font-weight:500;
+  color:var(--green);text-align:center;margin-bottom:16px;
+  letter-spacing:2px;
+}
+.paywall-perks{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.perk{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--t2);}
+.perk-icon{width:28px;height:28px;background:var(--green-dim);border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.btn-paywall{
+  width:100%;padding:16px;background:var(--green);color:#fff;border:none;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:16px;
+  border-radius:var(--r-md);cursor:pointer;margin-bottom:10px;
+}
+.btn-paywall-later{
+  width:100%;padding:12px;background:transparent;border:none;
+  font-size:13px;color:var(--t3);cursor:pointer;
+}
+
+/* ═══════════════════════════════
+   ERROR STATE
+═══════════════════════════════ */
+.error-card{
+  display:none;margin:0 1rem 10px;
+  background:var(--red-dim);border:1px solid rgba(239,68,68,0.2);
+  border-radius:var(--r-lg);padding:16px;text-align:center;
+}
+.error-card.show{display:block;}
+.error-emoji{font-size:32px;margin-bottom:8px;}
+.error-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--t1);margin-bottom:4px;}
+.error-msg{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:12px;}
+.btn-retry{
+  padding:10px 20px;background:var(--red);color:#fff;border:none;
+  border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;
+  font-family:inherit;
+}
+
+/* ═══════════════════════════════
+   EMPTY STATE
+═══════════════════════════════ */
+.empty-state{
+  text-align:center;padding:3rem 2rem;
+}
+.empty-emoji{font-size:48px;margin-bottom:1rem;display:block;}
+.empty-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t1);margin-bottom:8px;}
+.empty-sub{font-size:14px;color:var(--t2);line-height:1.6;}
+
+/* ═══════════════════════════════
+   SECTION PADDING
+═══════════════════════════════ */
+.px{padding:0 1rem;}
+.py{padding:1rem 0;}
+.p{padding:1rem;}
+.mb8{margin-bottom:8px;}
+.mb12{margin-bottom:12px;}
+.mb16{margin-bottom:16px;}
+.mb20{margin-bottom:20px;}
+
+/* ═══════════════════════════════
+   ANIMATIONS
+═══════════════════════════════ */
+.fade-in{animation:fadeInUp 0.3s var(--ease-out) both;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.stagger-1{animation-delay:0.05s;}
+.stagger-2{animation-delay:0.10s;}
+.stagger-3{animation-delay:0.15s;}
+.stagger-4{animation-delay:0.20s;}
+.stagger-5{animation-delay:0.25s;}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media(max-width:360px){
+  .p-grid{grid-template-columns:repeat(2,1fr);}
+  .score-row{grid-template-columns:1fr 1fr;gap:6px;}
+  .score-row .score-tile:last-child{display:none;}
+}
+@media(min-width:480px){
+  .p-grid{grid-template-columns:repeat(4,1fr);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ ONBOARDING ═══════ -->
+<div id="onboarding">
+  <div class="ob-slides" id="obSlides">
+    <div class="ob-slide" id="ob0">
+      <div class="ob-emoji">💀</div>
+      <div class="ob-title">Bhai Tu<br><span>Dekh Le</span></div>
+      <p class="ob-desc">Jo dikhta hai, wo hota nahi. AI tera bhai ban ke bata dega kya scene hai asli mein.</p>
+    </div>
+    <div class="ob-slide" id="ob1">
+      <div class="ob-emoji">🔍</div>
+      <div class="ob-title">Message<br><span>Decode Karo</span></div>
+      <p class="ob-desc">Paste any message — crush, ex, boss, bestie. Pick who sent it. AI bata dega real meaning, emotions, aur best reply.</p>
+    </div>
+    <div class="ob-slide" id="ob2">
+      <div class="ob-emoji">📱</div>
+      <div class="ob-title">Share The<br><span>Vibe Check</span></div>
+      <p class="ob-desc">Results itne savage hain ke share karna padega. Score card banao aur Instagram story pe daal do. 🔥</p>
+    </div>
+  </div>
+  <div class="ob-bottom">
+    <div class="ob-dots">
+      <div class="ob-dot active" id="od0"></div>
+      <div class="ob-dot" id="od1"></div>
+      <div class="ob-dot" id="od2"></div>
+    </div>
+    <button class="ob-btn" id="obBtn" onclick="nextSlide()">Shuru Karte Hain →</button>
+    <button class="ob-skip" onclick="finishOnboarding()">Skip</button>
+  </div>
+</div>
+
+<!-- ═══════ APP ═══════ -->
+<div id="app">
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-screen="decode" onclick="switchScreen('decode',this)">
+    <div class="nav-indicator"></div>
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    Decode
+  </button>
+  <button class="nav-btn" data-screen="chat" onclick="switchScreen('chat',this)">
+    <div class="nav-indicator"></div>
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Chat Scan
+  </button>
+  <button class="nav-btn" data-screen="stats" onclick="switchScreen('stats',this)">
+    <div class="nav-indicator"></div>
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Stats
+    <span class="nav-badge" id="statsBadge"></span>
+  </button>
+</nav>
+
+<!-- ═══════ DECODE SCREEN ═══════ -->
+<div class="screen active" id="screen-decode">
+  <div class="app-header">
+    <div class="app-logo">Bhai Tu <span>Dekh Le</span> 💀</div>
+    <div class="header-right">
+      <div class="streak-pill" id="streakPill" style="display:none">🔥 <span id="headerStreak">0</span></div>
+      <div class="tries-pill" id="triesPill"><span id="triesText">5 left</span></div>
+    </div>
+  </div>
+
+  <!-- Input section -->
+  <div class="p mb12">
+    <span class="label">message paste karo</span>
+    <textarea id="msgInput" rows="4" placeholder='"Haan dekhte hain" / "seen" / "okay sure" / "we should catch up sometime" ...'></textarea>
+  </div>
+
+  <div class="p mb12" style="padding-top:0">
+    <span class="label">kisne bheja?</span>
+    <div class="chip-row" id="whoRow">
+      <button class="chip active" data-who="crush">Crush 💘</button>
+      <button class="chip" data-who="girlfriend">GF/BF ❤️</button>
+      <button class="chip" data-who="bestie">Bestie 🤝</button>
+      <button class="chip" data-who="friend">Friend 👋</button>
+      <button class="chip" data-who="ex">Ex 👻</button>
+      <button class="chip" data-who="situationship">Situationship 🤡</button>
+      <button class="chip" data-who="professor">Professor 😐</button>
+      <button class="chip" data-who="parent">Parents 👨‍👩‍👧</button>
+      <button class="chip" data-who="hr">HR/Boss 💼</button>
+      <button class="chip" data-who="recruiter">Recruiter 🕵️</button>
+    </div>
+  </div>
+
+  <div class="p mb16" style="padding-top:0">
+    <span class="label">AI personality</span>
+    <div class="p-grid" id="personalityGrid">
+      <button class="p-card active" data-p="bhai">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">💀</span><div class="p-name">Bhai Tu Dekh Le</div>
+      </button>
+      <button class="p-card" data-p="delhi">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">😤</span><div class="p-name">Delhi Friend</div>
+      </button>
+      <button class="p-card" data-p="mumbai">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">😎</span><div class="p-name">Mumbai Friend</div>
+      </button>
+      <button class="p-card" data-p="gujarati">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🤝</span><div class="p-name">Gujarati Friend</div>
+      </button>
+      <button class="p-card" data-p="punjabi">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🦁</span><div class="p-name">Punjabi Friend</div>
+      </button>
+      <button class="p-card" data-p="hostel">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🛏️</span><div class="p-name">Hostel Roommate</div>
+      </button>
+      <button class="p-card" data-p="engg">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">👴</span><div class="p-name">Engg Senior</div>
+      </button>
+      <button class="p-card" data-p="toxic">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🔥</span><div class="p-name">Toxic Bestie</div>
+      </button>
+      <button class="p-card" data-p="therapist">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🧘</span><div class="p-name">Therapist Friend</div>
+      </button>
+      <button class="p-card" data-p="sigma">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">💪</span><div class="p-name">Sigma Gym Bro</div>
+      </button>
+      <button class="p-card" data-p="overthinker">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🌀</span><div class="p-name">Overthinker</div>
+      </button>
+      <button class="p-card" data-p="expert">
+        <div class="p-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <span class="p-emoji">🧠</span><div class="p-name">Relationship Expert</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="px mb20">
+    <button class="btn btn-green" id="decodeBtn" onclick="runDecode()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Decode Karo
+    </button>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader" id="decodeLoader">
+    <div class="loader-fires">🔥</div>
+    <div class="loader-msg" id="decodeLoaderMsg">Soch raha hoon<span class="loader-dots"></span></div>
+    <div class="loader-sub">AI message analyze kar raha hai</div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-card" id="decodeError">
+    <div class="error-emoji">😅</div>
+    <div class="error-title">Kuch toh gadbad hai</div>
+    <div class="error-msg" id="decodeErrorMsg">Network ya API issue. Ek baar aur try karo yaar.</div>
+    <button class="btn-retry" onclick="runDecode()">Dobara Try Karo</button>
+  </div>
+
+  <!-- Results -->
+  <div class="result-area" id="decodeResults">
+
+    <!-- 1. HERO — Bhai Tu Dekh Le Mode (first, biggest) -->
+    <div class="hero-result fade-in" id="r-bhaicard">
+      <div class="hero-badge">🤖 Bhai Tu Dekh Le Mode</div>
+      <div class="hero-reply-text" id="r-bhaireply"></div>
+      <div class="hero-why" id="r-bhaiwhy"></div>
+      <div class="hero-conf">
+        <span style="font-size:12px;color:#a78bfa;font-family:'DM Mono',monospace;">Confidence</span>
+        <div class="conf-track"><div class="conf-fill" id="r-confill"></div></div>
+        <span class="conf-num" id="r-confnum">0%</span>
+      </div>
+    </div>
+
+    <!-- 2. Score row — 3 tiles -->
+    <div class="score-row fade-in stagger-1">
+      <div class="score-tile">
+        <div class="score-tile-val" id="r-interest" style="color:var(--green)">--</div>
+        <div class="score-tile-lbl">Interest</div>
+      </div>
+      <div class="score-tile">
+        <div class="score-tile-val" id="r-risknum" style="color:var(--amber)">--</div>
+        <div class="score-tile-lbl">Risk</div>
+      </div>
+      <div class="score-tile">
+        <div class="score-tile-val" id="r-ghost" style="color:var(--red)">--</div>
+        <div class="score-tile-lbl">Ghost%</div>
+      </div>
+    </div>
+
+    <!-- 3. Overthinking alert -->
+    <div class="overthink-alert" id="r-overthink">
+      <span style="flex-shrink:0;font-size:18px">⚠️</span>
+      <span id="r-overthinktext"></span>
+    </div>
+
+    <!-- 4. Meaning card -->
+    <div class="px mb8">
+      <div class="card fade-in stagger-2">
+        <div class="card-title">🔍 Matlab Kya Hai</div>
+        <div class="meaning-text" id="r-meaning"></div>
+      </div>
+    </div>
+
+    <!-- 5. Brutal -->
+    <div class="px mb8">
+      <div class="card fade-in stagger-3">
+        <div class="card-title">💀 Brutal Honesty</div>
+        <div class="brutal-box" id="r-brutal"></div>
+      </div>
+    </div>
+
+    <!-- 6. Emotions -->
+    <div class="px mb8">
+      <div class="card fade-in stagger-3">
+        <div class="card-title">📊 Emotional State</div>
+        <div class="emotion-list" id="r-emotions"></div>
+      </div>
+    </div>
+
+    <!-- 7. Risk -->
+    <div class="px mb12">
+      <div class="card fade-in stagger-4">
+        <div class="card-title">⚠️ Conversation Risk</div>
+        <div class="risk-blocks">
+          <div class="risk-block" id="rb1"></div>
+          <div class="risk-block" id="rb2"></div>
+          <div class="risk-block" id="rb3"></div>
+        </div>
+        <div class="risk-label" id="r-risklabel"></div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px;" id="r-riskreason"></div>
+      </div>
+    </div>
+
+    <!-- 8. Replies -->
+    <div class="px mb8">
+      <span class="label">💬 Reply Options — tap to copy</span>
+    </div>
+    <div class="px mb16">
+      <div class="reply-list" id="r-replies"></div>
+    </div>
+
+    <!-- 9. Share card -->
+    <div class="px mb8">
+      <span class="label">🔗 Share The Vibe Check</span>
+    </div>
+    <div class="share-card-wrap fade-in stagger-5">
+      <div class="sc-brand">Bhai Tu Dekh Le 💀</div>
+      <div class="sc-big" id="sc-interest">--</div>
+      <div class="sc-verdict" id="sc-verdict"></div>
+      <div class="sc-meta-row">
+        <div class="sc-meta-item">
+          <div class="sc-meta-val" id="sc-risk">--</div>
+          <div class="sc-meta-lbl">Risk</div>
+        </div>
+        <div class="sc-meta-item">
+          <div class="sc-meta-val" id="sc-ghost">--</div>
+          <div class="sc-meta-lbl">Ghost Chance</div>
+        </div>
+        <div class="sc-meta-item">
+          <div class="sc-meta-val" id="sc-personality"></div>
+          <div class="sc-meta-lbl">Personality</div>
+        </div>
+      </div>
+      <div class="sc-tag">#BhaiTuDekhLe &nbsp;·&nbsp; bhai-tu-dekh-le.app</div>
+    </div>
+    <div class="share-row mb20">
+      <button class="share-btn" onclick="shareApp('whatsapp')">📱 WhatsApp</button>
+      <button class="share-btn" onclick="shareApp('instagram')">📸 Instagram</button>
+      <button class="share-btn" onclick="shareApp('copy')">📋 Copy</button>
+      <button class="share-btn" onclick="shareApp('x')">𝕏 Twitter</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════ CHAT SCAN SCREEN ═══════ -->
+<div class="screen" id="screen-chat">
+  <div class="app-header">
+    <div class="app-logo">Chat <span>Scan</span> 🧬</div>
+    <div class="header-right">
+      <div style="background:var(--purple-dim);border:1px solid rgba(139,92,246,0.25);border-radius:var(--r-full);padding:5px 12px;font-size:11px;color:#c4b5fd;font-family:'DM Mono',monospace;letter-spacing:0.5px;">Premium</div>
+    </div>
+  </div>
+
+  <div class="p mb12">
+    <span class="label">poori conversation paste karo</span>
+    <textarea id="chatInput" rows="9" placeholder="You: hey&#10;Them: haan bolo&#10;You: free ho aaj?&#10;Them: dekhte hain...
+
+Poora chat paste karo — jitna zyada, utna better analysis."></textarea>
+  </div>
+
+  <div class="p mb16" style="padding-top:0">
+    <span class="label">relationship type</span>
+    <div class="chip-row" id="chatWhoRow">
+      <button class="chip active" data-cw="crush">Crush 💘</button>
+      <button class="chip" data-cw="partner">Partner ❤️</button>
+      <button class="chip" data-cw="friend">Friend 👋</button>
+      <button class="chip" data-cw="ex">Ex 👻</button>
+    </div>
+  </div>
+
+  <div class="px mb20">
+    <button class="btn btn-purple" id="chatBtn" onclick="runChatAnalysis()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat Analyse Karo
+    </button>
+  </div>
+
+  <div class="loader" id="chatLoader">
+    <div class="loader-fires">🧬</div>
+    <div class="loader-msg" id="chatLoaderMsg">Poori chat padh raha hoon<span class="loader-dots"></span></div>
+    <div class="loader-sub">Patterns, effort, aur vibes analyze ho rahi hain</div>
+  </div>
+
+  <div class="error-card" id="chatError">
+    <div class="error-emoji">😅</div>
+    <div class="error-title">Analysis fail ho gayi</div>
+    <div class="error-msg">Network issue lag raha hai. Chat dobara paste karo aur try karo.</div>
+    <button class="btn-retry" onclick="runChatAnalysis()">Dobara Try Karo</button>
+  </div>
+
+  <div class="result-area" id="chatResults">
+
+    <!-- Health score -->
+    <div class="px mb8">
+      <div class="card fade-in">
+        <div class="card-title">💚 Conversation Health</div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="health-big" id="ca-health">--</div>
+          <div>
+            <div style="font-size:14px;color:var(--t1);font-weight:600;" id="ca-healthlabel"></div>
+            <div style="font-size:12px;color:var(--t3);margin-top:3px;">/100 health score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Effort balance -->
+    <div class="px mb8">
+      <div class="card fade-in stagger-1">
+        <div class="card-title">⚖️ Effort Balance</div>
+        <div class="effort-vis" id="ca-effortvis">
+          <div class="effort-side">
+            <div class="effort-label">You</div>
+            <div class="effort-track"><div class="effort-fill-you" id="ef-you" style="width:50%"></div></div>
+          </div>
+          <div class="effort-div"></div>
+          <div class="effort-side">
+            <div class="effort-label" style="text-align:right">Them</div>
+            <div class="effort-track"><div class="effort-fill-them" id="ef-them" style="width:50%"></div></div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.6;margin-top:8px;" id="ca-effort"></div>
+      </div>
+    </div>
+
+    <!-- Ghost probability -->
+    <div class="px mb8">
+      <div class="card fade-in stagger-2">
+        <div class="card-title">👻 Ghosting Probability</div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;line-height:1;" id="ca-ghost">--</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5;" id="ca-ghostlabel"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Green & Red flags -->
+    <div class="px mb8">
+      <div class="card fade-in stagger-3">
+        <div class="card-title" style="color:var(--green)">✅ Green Flags</div>
+        <div id="ca-green"></div>
+      </div>
+    </div>
+    <div class="px mb8">
+      <div class="card fade-in stagger-3">
+        <div class="card-title" style="color:var(--red)">🚩 Red Flags</div>
+        <div id="ca-red"></div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="px mb20">
+      <div class="card fade-in stagger-4">
+        <div class="card-title">🧠 AI Summary</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.7;" id="ca-summary"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════ STATS SCREEN ═══════ -->
+<div class="screen" id="screen-stats">
+  <div class="app-header">
+    <div class="app-logo">Tera <span>Overthinking</span> Report</div>
+  </div>
+
+  <!-- Empty state shown when no data -->
+  <div id="statsEmpty" class="empty-state" style="display:none">
+    <span class="empty-emoji">📊</span>
+    <div class="empty-title">Abhi tak kuch nahi hua</div>
+    <p class="empty-sub">Pehle kuch messages decode kar. Phir yahan tera poora psychological profile ready milega. 💀</p>
+    <br/>
+    <button onclick="switchScreen('decode', document.querySelector('[data-screen=decode]'))" style="background:var(--green);color:#fff;border:none;padding:12px 24px;border-radius:var(--r-md);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Decode Karo →</button>
+  </div>
+
+  <div id="statsContent">
+    <!-- Streak hero -->
+    <div style="margin:1rem;background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.08));border:1px solid rgba(245,158,11,0.2);border-radius:var(--r-xl);padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--amber);line-height:1;" id="st-streak">0</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Day Streak 🔥</div>
+        </div>
+        <div style="font-size:56px;">🔥</div>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="week-chart" id="weekChart"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;" id="weekDays"></div>
+      </div>
+    </div>
+
+    <!-- Stat grid -->
+    <div class="stat-grid px py">
+      <div class="stat-tile">
+        <div class="stat-num" id="st-total">0</div>
+        <div class="stat-lbl">Total Decodes</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-num" style="color:var(--red);" id="st-overthink">0%</div>
+        <div class="stat-lbl">Overthink Score</div>
+      </div>
+      <div class="stat-tile full">
+        <div class="stat-lbl">Most Decoded Sender</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t1);margin-top:4px;" id="st-topcrusher">--</div>
+      </div>
+      <div class="stat-tile full">
+        <div class="stat-lbl">Fav Personality</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--t1);margin-top:4px;" id="st-favperson">--</div>
+      </div>
+    </div>
+
+    <!-- Monthly report -->
+    <div class="px mb20">
+      <div class="report-card">
+        <div class="report-title">📅 Monthly Overthinking Report</div>
+        <div class="report-text" id="st-report">Abhi tak koi decode nahi hua. Pehle decode karo phir yahan report dekhna 😭</div>
+      </div>
+    </div>
+
+    <div class="px mb20">
+      <button class="btn-ghost" onclick="confirmResetStats()">Reset Stats 🗑️</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<!-- ═══════ PAYWALL SHEET ═══════ -->
+<div class="sheet-overlay" id="paywallOverlay">
+  <div class="paywall-sheet">
+    <div class="paywall-handle"></div>
+    <div class="paywall-title">Aaj ka quota khatam 💀</div>
+    <div class="paywall-sub">Tu bahut zyada overthink kar raha hai bhai. Kal aa jaana — free decodes reset ho jayenge.</div>
+    <div class="countdown" id="paywallCountdown">--:--:--</div>
+    <div class="paywall-perks">
+      <div class="perk"><div class="perk-icon">🔥</div><span>Kal 5 aur free decodes milenge</span></div>
+      <div class="perk"><div class="perk-icon">💀</div><span>Unlimited ke liye ₹49/month</span></div>
+      <div class="perk"><div class="perk-icon">📊</div><span>Chat Analysis unlimited</span></div>
+    </div>
+    <button class="btn-paywall">Unlock Unlimited — ₹49/month</button>
+    <button class="btn-paywall-later" onclick="document.getElementById('paywallOverlay').classList.remove('show')">Kal Aaunga 👋</button>
+  </div>
+</div>
+
+<!-- ═══════ TOAST ═══════ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════
+//  ONBOARDING
+// ════════════════════════════════
+let obSlide = 0;
+const OB_SLIDES = 3;
+
+function nextSlide() {
+  if (obSlide >= OB_SLIDES - 1) { finishOnboarding(); return; }
+  obSlide++;
+  const slides = document.querySelectorAll('.ob-slide');
+  slides.forEach((s, i) => s.style.transform = `translateX(${(i - obSlide) * 100}%)`);
+  document.querySelectorAll('.ob-dot').forEach((d, i) => d.classList.toggle('active', i === obSlide));
+  document.getElementById('obBtn').textContent = obSlide === OB_SLIDES - 1 ? 'Shuru Karte Hain 🔥' : 'Aage →';
+}
+
+function finishOnboarding() {
+  localStorage.setItem('btdl_onboarded', '1');
+  document.getElementById('onboarding').style.opacity = '0';
+  document.getElementById('onboarding').style.transform = 'scale(0.98)';
+  document.getElementById('onboarding').style.transition = 'all 0.3s ease';
+  setTimeout(() => {
+    document.getElementById('onboarding').style.display = 'none';
+    document.getElementById('app').classList.add('ready');
+  }, 300);
+}
+
+if (localStorage.getItem('btdl_onboarded')) {
+  document.getElementById('onboarding').style.display = 'none';
+  document.getElementById('app').classList.add('ready');
+}
+
+// ════════════════════════════════
+//  STATE
+// ════════════════════════════════
+let who = 'crush', personality = 'bhai', chatWho = 'crush';
+let triesLeft = parseInt(localStorage.getItem('btdl_tries') || '5');
+let triesDate = localStorage.getItem('btdl_date') || '';
+const today = new Date().toDateString();
+if (triesDate !== today) { triesLeft = 5; saveTries(); }
+
+let stats = JSON.parse(localStorage.getItem('btdl_stats') || JSON.stringify({
+  total:0, streak:0, lastDate:'', whoCount:{}, pCount:{}, overthinkTotal:0,
+  weeklyData: [0,0,0,0,0,0,0]
+}));
+if (!stats.weeklyData) stats.weeklyData = [0,0,0,0,0,0,0];
+
+let lastDecodeData = {};
+let lastDecodeMsg = '';
+let countdownTimer = null;
+
+updateTriesUI();
+updateStatsUI();
+updateStreakUI();
+
+// ════════════════════════════════
+//  TRIES
+// ════════════════════════════════
+function saveTries() {
+  localStorage.setItem('btdl_tries', triesLeft);
+  localStorage.setItem('btdl_date', today);
+}
+
+function updateTriesUI() {
+  const el = document.getElementById('triesText');
+  const pill = document.getElementById('triesPill');
+  if (triesLeft <= 0) {
+    el.textContent = 'Limit 😅';
+    pill.classList.add('warning');
+  } else if (triesLeft <= 2) {
+    el.textContent = `${triesLeft} left`;
+    pill.classList.add('warning');
+  } else {
+    el.textContent = `${triesLeft} left`;
+    pill.classList.remove('warning');
+  }
+}
+
+function updateStreakUI() {
+  const sp = document.getElementById('streakPill');
+  const hs = document.getElementById('headerStreak');
+  if (stats.streak > 0) {
+    sp.style.display = 'flex';
+    hs.textContent = stats.streak;
+  }
+}
+
+// ════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════
+function switchScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else document.querySelector(`[data-screen="${id}"]`).classList.add('active');
+  if (id === 'stats') updateStatsUI();
+}
+
+// ════════════════════════════════
+//  PILL / CARD SELECTIONS
+// ════════════════════════════════
+document.querySelectorAll('#whoRow .chip').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#whoRow .chip').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); who = b.dataset.who;
+}));
+document.querySelectorAll('#chatWhoRow .chip').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#chatWhoRow .chip').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); chatWho = b.dataset.cw;
+}));
+document.querySelectorAll('#personalityGrid .p-card').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#personalityGrid .p-card').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); personality = b.dataset.p;
+}));
+
+// ════════════════════════════════
+//  PERSONALITY PROMPTS
+// ════════════════════════════════
+const personalityPrompts = {
+  bhai: 'You are a brutally honest Indian best friend (bhai). Funny, sarcastic, uses Hindi slang (yaar, bhai, arre, matlab, lagta hai, kya scene hai, seedha bola). Gen-Z Indian energy. Never sugarcoat.',
+  delhi: 'You are a bold, no-filter Delhi friend. Confident, slightly aggressive in a loving way. Uses Delhi slang (yaar sun, seedha baat, teri marzi, chal hat). Speaks mind without sugarcoating.',
+  mumbai: 'You are a chill, sarcastic Mumbai friend. Uses "bhai" a lot, tapori energy. Nothing fazes you. "Ho jayega" attitude. Cool and unbothered.',
+  gujarati: 'You are a warm Gujarati friend with hustler/business energy. Uses Gujarati expressions (kem cho, su thayu). Ties everything to practicality. Very community-oriented.',
+  punjabi: 'You are a loud, enthusiastic Punjabi friend. Everything is either "chakde" or "kya scene hai yaar". Very passionate, emotional, loud in a loving way. Uses Punjabi phrases naturally.',
+  hostel: 'You are the classic hostel roommate — sleep-deprived, seen everything, has zero patience for drama. Very blunt. "Yaar so ja" energy. But also genuinely caring.',
+  engg: 'You are the wise Engineering senior. You have seen everything. Uses technical metaphors sometimes. Very practical, no emotions. "Placement ke baad sab theek ho jayega" energy.',
+  toxic: 'You are TOXIC bestie — maximum drama, conspiracy theories, 100% on the user\'s side, sees red flags everywhere. "Block karo", "teri galti nahi", "plan hai iska".',
+  therapist: 'You are a calm, emotionally aware therapist friend. Validates feelings. Asks reflective questions. Measured and caring. Uses proper emotional vocabulary. Never judgmental.',
+  sigma: 'You are a sigma gym bro. Everything is about mindset, grindset, and not being emotionally weak. "Focus on gains, not feelings." Uses gym metaphors. "Ye sab distraction hai bhai."',
+  overthinker: 'You are a ridiculously overthinking friend. You find 10 meanings in "ok". Slightly anxious but very detailed. Every punctuation means something. Makes everything a conspiracy.',
+  expert: 'You are a mature relationship communication expert. Balanced, evidence-based insights. Psychological frameworks. Objective but helpful. Does not take sides.'
+};
+
+// ════════════════════════════════
+//  LOADER MESSAGES
+// ════════════════════════════════
+const loaderMsgs = [
+  ['bhai soch raha hoon...', 'yaar ye toh complicated hai...', 'theek hai sun...', 'analysis almost done...'],
+  ['seedha baat pe aate hain...', 'real scene kya hai dekh raha hoon...', 'almost done...'],
+  ['chill, analyzing...', 'vibe check chal raha hai...', 'done in a sec...'],
+  ['kem cho situation...', 'practical analysis chal rahi hai...', 'almost...'],
+  ['oye hoye, padh raha hoon...', 'badi interesting situation hai...', 'done...'],
+  ['yaar so ja...', 'okay seriously analyze kar raha hoon...', 'done...'],
+  ['bhai placement ke baad...', 'technically speaking...', 'analysis done...'],
+  ['RED FLAG RED FLAG...', 'block karne ki taiyari...', 'conspiracy mode on...'],
+  ['hmm, interesting...', 'validating your feelings...', 'almost ready...'],
+  ['distraction mat le...', 'stay focused...', 'gains > feelings...'],
+  ['wait, is this a pattern?...', 'examining punctuation...', 'finding hidden meaning...'],
+  ['analyzing communication patterns...', 'cross-referencing data...', 'almost ready...'],
+];
+
+// ════════════════════════════════
+//  DECODE
+// ════════════════════════════════
+async function runDecode() {
+  const msg = document.getElementById('msgInput').value.trim();
+  if (!msg) { showToast('Kuch toh likho yaar 🙏'); return; }
+  if (triesLeft <= 0) { showPaywall(); return; }
+
+  lastDecodeMsg = msg;
+  document.getElementById('decodeBtn').disabled = true;
+  document.getElementById('decodeLoader').classList.add('visible');
+  document.getElementById('decodeResults').classList.remove('visible');
+  document.getElementById('decodeError').classList.remove('show');
+
+  // Rotating loader messages
+  const pIdx = Object.keys(personalityPrompts).indexOf(personality);
+  const msgs = loaderMsgs[pIdx] || loaderMsgs[0];
+  let mi = 0;
+  document.getElementById('decodeLoaderMsg').firstChild.textContent = msgs[0];
+  const msgTimer = setInterval(() => {
+    mi = Math.min(mi + 1, msgs.length - 1);
+    const el = document.getElementById('decodeLoaderMsg');
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.firstChild.textContent = msgs[mi];
+      el.style.opacity = '1';
+    }, 150);
+  }, 2000);
+
+  const sysPrompt = `${personalityPrompts[personality]}
+
+Analyze this message and respond ONLY in valid JSON. No markdown, no backticks.
+
+{
+  "meaning": "2-3 sentence interpretation in your personality's voice. Use maybe/might/could. Sound like a REAL friend.",
+  "brutal": "1-2 sentences brutally honest take in your voice. Specific, funny, true.",
+  "emotions": [
+    {"label":"Emotion name","pct":35},
+    {"label":"Another","pct":40},
+    {"label":"Another","pct":25}
+  ],
+  "risk": "green|yellow|red",
+  "riskReason": "one line why in your voice",
+  "interest": 65,
+  "interestDesc": "one line fun description",
+  "ghostChance": 35,
+  "overthinking": true,
+  "overthinkMsg": "funny overthinking warning if true",
+  "replies": [
+    {"style":"😎 Cool","text":"short reply text"},
+    {"style":"❤️ Flirty","text":"short reply text"},
+    {"style":"😂 Funny","text":"short reply text"},
+    {"style":"🔥 Roast","text":"short reply text"},
+    {"style":"🧘 Mature","text":"short reply text"},
+    {"style":"🤷 Leave on Read","text":"Don't reply. Here's why: reason"}
+  ],
+  "bhaiReply": "the single BEST reply text to send",
+  "bhaiWhy": "1-2 sentences why this is the best reply, in your personality voice",
+  "bhaiConfidence": 82
+}
+
+CRITICAL: Reply texts must be SHORT like real texts. NEVER say 'oh okay haha'. Use lowercase. Match the vibe.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1500,
+        system: sysPrompt,
+        messages:[{role:'user',content:`Message: "${msg}"\nSender type: ${who}\nDecode this.`}]
+      })
+    });
+
+    clearInterval(msgTimer);
+
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    const raw = data.content.map(i => i.text || '').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    renderDecodeResult(parsed);
+
+    // Update tries & stats
+    triesLeft--;
+    saveTries();
+    updateTriesUI();
+    updateStats(who, personality, parsed.overthinking);
+
+  } catch(e) {
+    clearInterval(msgTimer);
+    document.getElementById('decodeError').classList.add('show');
+    document.getElementById('decodeLoaderMsg').firstChild.textContent = 'Error ho gayi';
+  }
+
+  document.getElementById('decodeLoader').classList.remove('visible');
+  document.getElementById('decodeBtn').disabled = false;
+}
+
+function renderDecodeResult(d) {
+  lastDecodeData = d;
+
+  // Hero — Bhai Mode
+  document.getElementById('r-bhaireply').textContent = '"' + (d.bhaiReply || '') + '"';
+  document.getElementById('r-bhaiwhy').textContent = d.bhaiWhy || '';
+  const conf = d.bhaiConfidence || 75;
+  setTimeout(() => {
+    document.getElementById('r-confill').style.width = conf + '%';
+    document.getElementById('r-confnum').textContent = conf + '%';
+  }, 300);
+
+  // Score tiles
+  const interest = d.interest || 50;
+  const ghost = d.ghostChance || 30;
+  const riskMap = { green:'Low', yellow:'Mid', red:'High' };
+  const riskColor = { green:'var(--green)', yellow:'var(--amber)', red:'var(--red)' };
+
+  document.getElementById('r-interest').textContent = interest + '%';
+  document.getElementById('r-interest').style.color = interest > 65 ? 'var(--green)' : interest > 35 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('r-risknum').textContent = riskMap[d.risk] || 'Mid';
+  document.getElementById('r-risknum').style.color = riskColor[d.risk] || 'var(--amber)';
+  document.getElementById('r-ghost').textContent = ghost + '%';
+  document.getElementById('r-ghost').style.color = ghost > 60 ? 'var(--red)' : ghost > 30 ? 'var(--amber)' : 'var(--green)';
+
+  // Overthinking
+  const oa = document.getElementById('r-overthink');
+  if (d.overthinking) {
+    document.getElementById('r-overthinktext').textContent = d.overthinkMsg || 'Warning: Zyada mat soch yaar 😭';
+    oa.classList.add('show');
+  } else { oa.classList.remove('show'); }
+
+  // Meaning & brutal
+  document.getElementById('r-meaning').textContent = d.meaning || '';
+  document.getElementById('r-brutal').textContent = d.brutal || '';
+
+  // Emotions
+  const emotEl = document.getElementById('r-emotions');
+  emotEl.innerHTML = '';
+  (d.emotions || []).forEach(e => {
+    const row = document.createElement('div');
+    row.className = 'emotion-row';
+    row.innerHTML = `<span class="emotion-name">${e.label}</span><div class="emotion-track"><div class="emotion-bar" data-w="${e.pct}%"></div></div><span class="emotion-pct">${e.pct}%</span>`;
+    emotEl.appendChild(row);
+  });
+  setTimeout(() => {
+    emotEl.querySelectorAll('.emotion-bar').forEach(b => b.style.width = b.dataset.w);
+  }, 400);
+
+  // Risk
+  const colors = { green:'var(--green)', yellow:'var(--amber)', red:'var(--red)' };
+  const riskNames = {
+    green: '🟢 Low Risk — Conversation is healthy',
+    yellow: '🟡 Mixed signals — Tread carefully',
+    red: '🔴 High Risk — Ghosting danger zone'
+  };
+  ['rb1','rb2','rb3'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.style.background = (d.risk==='green'&&i===0)||(d.risk==='yellow'&&i<=1)||(d.risk==='red') ? (colors[d.risk]||'var(--amber)') : 'var(--bg4)';
+  });
+  document.getElementById('r-risklabel').textContent = riskNames[d.risk] || d.risk;
+  document.getElementById('r-risklabel').style.color = colors[d.risk] || 'var(--t1)';
+  document.getElementById('r-riskreason').textContent = d.riskReason || '';
+
+  // Replies
+  const repliesEl = document.getElementById('r-replies');
+  repliesEl.innerHTML = '';
+  (d.replies || []).forEach((r, idx) => {
+    const card = document.createElement('div');
+    card.className = 'reply-card';
+    card.style.animationDelay = (idx * 0.06) + 's';
+    card.innerHTML = `
+      <div class="reply-emoji">${r.style.split(' ')[0]}</div>
+      <div style="flex:1">
+        <div class="reply-style">${r.style.slice(2)}</div>
+        <div class="reply-text">${r.text}</div>
+        <div class="reply-copy-hint">Tap to copy</div>
+        <div class="reply-copied" id="rc-${idx}">✓ Copied! Bhej de 🚀</div>
+      </div>`;
+    card.onclick = () => {
+      navigator.clipboard.writeText(r.text);
+      document.querySelectorAll('.reply-copied').forEach(x => x.style.display='none');
+      const rc = document.getElementById(`rc-${idx}`);
+      rc.style.display = 'block';
+      setTimeout(() => rc.style.display='none', 2000);
+      card.style.borderColor = 'var(--green)';
+      setTimeout(() => card.style.borderColor='', 1000);
+    };
+    repliesEl.appendChild(card);
+  });
+
+  // Share card
+  document.getElementById('sc-interest').textContent = interest + '%';
+  document.getElementById('sc-verdict').textContent = d.bhaiWhy ? d.bhaiWhy.slice(0,50)+'...' : '';
+  document.getElementById('sc-risk').textContent = riskMap[d.risk] || '--';
+  document.getElementById('sc-ghost').textContent = ghost + '%';
+  const pNames = {bhai:'💀',delhi:'😤',mumbai:'😎',gujarati:'🤝',punjabi:'🦁',hostel:'🛏️',engg:'👴',toxic:'🔥',therapist:'🧘',sigma:'💪',overthinker:'🌀',expert:'🧠'};
+  document.getElementById('sc-personality').textContent = pNames[personality] || '💀';
+
+  document.getElementById('decodeResults').classList.add('visible');
+  setTimeout(() => document.getElementById('decodeResults').scrollIntoView({behavior:'smooth',block:'start'}), 100);
+}
+
+// ════════════════════════════════
+//  CHAT ANALYSIS
+// ════════════════════════════════
+async function runChatAnalysis() {
+  const chat = document.getElementById('chatInput').value.trim();
+  if (!chat) { showToast('Chat paste karo pehle 🙏'); return; }
+
+  document.getElementById('chatBtn').disabled = true;
+  document.getElementById('chatLoader').classList.add('visible');
+  document.getElementById('chatResults').classList.remove('visible');
+  document.getElementById('chatError').classList.remove('show');
+
+  const loaderMsgsChat = ['Poori chat padh raha hoon', 'Patterns dhundh raha hoon', 'Effort ratio calculate kar raha hoon', 'Vibes analyze ho rahi hain', 'Almost done'];
+  let cmi = 0;
+  const ct = setInterval(() => {
+    cmi = Math.min(cmi+1, loaderMsgsChat.length-1);
+    document.getElementById('chatLoaderMsg').firstChild.textContent = loaderMsgsChat[cmi];
+  }, 2000);
+
+  const sysPrompt = `You are an expert conversation analyst for Indian Gen Z relationships. Analyze the chat and return ONLY valid JSON. No markdown.
+
+{
+  "health": 72,
+  "healthLabel": "one line description of relationship health",
+  "effortYou": 60,
+  "effortThem": 40,
+  "effort": "2 sentence analysis of who initiates more",
+  "ghostChance": 35,
+  "ghostLabel": "one line ghost probability",
+  "greenFlags": ["flag1","flag2","flag3"],
+  "redFlags": ["flag1","flag2","flag3"],
+  "summary": "2-3 sentence paragraph, honest and desi-toned"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-6', max_tokens:1000,
+        system: sysPrompt,
+        messages:[{role:'user',content:`Relationship: ${chatWho}\n\nChat:\n${chat}`}]
+      })
+    });
+
+    clearInterval(ct);
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    const raw = data.content.map(i => i.text||'').join('');
+    const d = JSON.parse(raw.replace(/```json|```/g,'').trim());
+
+    const hEl = document.getElementById('ca-health');
+    hEl.textContent = d.health;
+    hEl.style.color = d.health > 65 ? 'var(--green)' : d.health > 35 ? 'var(--amber)' : 'var(--red)';
+    document.getElementById('ca-healthlabel').textContent = d.healthLabel;
+    document.getElementById('ca-effort').textContent = d.effort;
+
+    // Effort bars
+    setTimeout(() => {
+      document.getElementById('ef-you').style.width = (d.effortYou || 50) + '%';
+      document.getElementById('ef-them').style.width = (d.effortThem || 50) + '%';
+    }, 300);
+
+    const gEl = document.getElementById('ca-ghost');
+    gEl.textContent = d.ghostChance + '%';
+    gEl.style.color = d.ghostChance > 65 ? 'var(--red)' : d.ghostChance > 35 ? 'var(--amber)' : 'var(--green)';
+    document.getElementById('ca-ghostlabel').textContent = d.ghostLabel;
+
+    document.getElementById('ca-green').innerHTML = (d.greenFlags||[]).map(f => `<div class="flag-item"><span class="flag-icon">✅</span>${f}</div>`).join('');
+    document.getElementById('ca-red').innerHTML = (d.redFlags||[]).map(f => `<div class="flag-item"><span class="flag-icon">🚩</span>${f}</div>`).join('');
+    document.getElementById('ca-summary').textContent = d.summary;
+
+    document.getElementById('chatResults').classList.add('visible');
+    document.getElementById('chatResults').scrollIntoView({behavior:'smooth',block:'start'});
+
+  } catch(e) {
+    clearInterval(ct);
+    document.getElementById('chatError').classList.add('show');
+  }
+
+  document.getElementById('chatLoader').classList.remove('visible');
+  document.getElementById('chatBtn').disabled = false;
+}
+
+// ════════════════════════════════
+//  STATS
+// ════════════════════════════════
+function updateStats(w, p, overthinking) {
+  const todayStr = new Date().toDateString();
+  stats.total++;
+  stats.whoCount[w] = (stats.whoCount[w] || 0) + 1;
+  stats.pCount[p] = (stats.pCount[p] || 0) + 1;
+  if (overthinking) stats.overthinkTotal++;
+
+  // Streak
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (stats.lastDate !== todayStr) {
+    stats.streak = stats.lastDate === yesterday.toDateString() ? stats.streak + 1 : 1;
+    stats.lastDate = todayStr;
+  }
+
+  // Weekly data — today is index 6
+  const dayOfWeek = new Date().getDay();
+  stats.weeklyData[dayOfWeek] = (stats.weeklyData[dayOfWeek] || 0) + 1;
+
+  localStorage.setItem('btdl_stats', JSON.stringify(stats));
+  updateStreakUI();
+
+  // Show stats badge
+  if (stats.total % 5 === 0) {
+    document.getElementById('statsBadge').classList.add('show');
+  }
+}
+
+function updateStatsUI() {
+  const hasData = stats.total > 0;
+  document.getElementById('statsEmpty').style.display = hasData ? 'none' : 'block';
+  document.getElementById('statsContent').style.display = hasData ? 'block' : 'none';
+  if (!hasData) return;
+
+  document.getElementById('st-streak').textContent = stats.streak || 0;
+  document.getElementById('st-total').textContent = stats.total || 0;
+  const ot = stats.total > 0 ? Math.round((stats.overthinkTotal / stats.total) * 100) : 0;
+  document.getElementById('st-overthink').textContent = ot + '%';
+
+  const topWho = Object.entries(stats.whoCount||{}).sort((a,b)=>b[1]-a[1])[0];
+  const whoNames = {crush:'Crush 💘',girlfriend:'GF/BF ❤️',bestie:'Bestie 🤝',friend:'Friend 👋',ex:'Ex 👻',situationship:'Situationship 🤡',professor:'Professor 😐',parent:'Parents 👨‍👩‍👧',hr:'Boss 💼',recruiter:'Recruiter 🕵️'};
+  document.getElementById('st-topcrusher').textContent = topWho ? (whoNames[topWho[0]]||topWho[0]) + ' ('+topWho[1]+'x)' : 'Abhi koi nahi 😶';
+
+  const topP = Object.entries(stats.pCount||{}).sort((a,b)=>b[1]-a[1])[0];
+  const pNames = {bhai:'Bhai Tu Dekh Le 💀',delhi:'Delhi Friend 😤',mumbai:'Mumbai Friend 😎',gujarati:'Gujarati Friend 🤝',punjabi:'Punjabi Friend 🦁',hostel:'Hostel Roommate 🛏️',engg:'Engg Senior 👴',toxic:'Toxic Bestie 🔥',therapist:'Therapist Friend 🧘',sigma:'Sigma Gym Bro 💪',overthinker:'Overthinker 🌀',expert:'Relationship Expert 🧠'};
+  document.getElementById('st-favperson').textContent = topP ? (pNames[topP[0]]||topP[0]) : 'Abhi koi nahi 😶';
+
+  if (stats.total > 0) {
+    document.getElementById('st-report').textContent = `Is mahine tune ${stats.total} decode kiye. Tera overthinking score ${ot}% hai — ${ot>60?'bhai tu bahut zyada sochta hai yaar 😭':ot>30?'thoda overthink hai but manageable 🤔':'ekdum chill hai tu, respect 💪'}. Sabse zyada ${topWho?whoNames[topWho[0]]||topWho[0]:'kisi ke'} messages decode kiye.`;
+  }
+
+  // Weekly chart
+  buildWeekChart();
+}
+
+function buildWeekChart() {
+  const chartEl = document.getElementById('weekChart');
+  const daysEl = document.getElementById('weekDays');
+  if (!chartEl) return;
+  const days = ['S','M','T','W','T','F','S'];
+  const today = new Date().getDay();
+  const maxVal = Math.max(...stats.weeklyData, 1);
+  chartEl.innerHTML = '';
+  daysEl.innerHTML = '';
+
+  days.forEach((d, i) => {
+    const val = stats.weeklyData[i] || 0;
+    const pct = (val / maxVal) * 100;
+    const wrap = document.createElement('div');
+    wrap.className = 'week-bar-wrap';
+    const bar = document.createElement('div');
+    bar.className = 'week-bar' + (i === today ? ' today' : '');
+    bar.style.height = '0px';
+    wrap.appendChild(bar);
+    chartEl.appendChild(wrap);
+    setTimeout(() => { bar.style.transition = 'height 0.8s var(--ease-out)'; bar.style.height = Math.max(pct * 0.52, 2) + 'px'; }, 100 + i * 50);
+
+    const label = document.createElement('div');
+    label.className = 'week-day';
+    label.textContent = d;
+    label.style.flex = '1';
+    label.style.textAlign = 'center';
+    daysEl.appendChild(label);
+  });
+}
+
+function confirmResetStats() {
+  showConfirm('Tu sach mein sab reset karna chahta hai? Poora history jaayega 🗑️', () => {
+    stats = { total:0, streak:0, lastDate:'', whoCount:{}, pCount:{}, overthinkTotal:0, weeklyData:[0,0,0,0,0,0,0] };
+    localStorage.setItem('btdl_stats', JSON.stringify(stats));
+    updateStatsUI();
+    updateStreakUI();
+    document.getElementById('statsBadge').classList.remove('show');
+    showToast('Stats reset ho gaye 🗑️');
+  });
+}
+
+// ════════════════════════════════
+//  PAYWALL
+// ════════════════════════════════
+function showPaywall() {
+  document.getElementById('paywallOverlay').classList.add('show');
+  startCountdown();
+}
+
+function startCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  function update() {
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    const diff = midnight - now;
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('paywallCountdown').textContent =
+      String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  update();
+  countdownTimer = setInterval(update, 1000);
+}
+
+// ════════════════════════════════
+//  SHARE
+// ════════════════════════════════
+function shareApp(platform) {
+  const interest = lastDecodeData.interest || '??';
+  const ghost = lastDecodeData.ghostChance || '??';
+  const risk = lastDecodeData.risk ? {green:'Low',yellow:'Medium',red:'High'}[lastDecodeData.risk] : '??';
+  const text = `💀 Bhai Tu Dekh Le — AI Vibe Check\n\nInterest Level: ${interest}%\nGhosting Risk: ${ghost}%\nConversation Risk: ${risk}\n\nTu bhi try kar: bhai-tu-dekh-le.app\n#BhaiTuDekhLe`;
+  if (platform === 'whatsapp') window.open('https://wa.me/?text=' + encodeURIComponent(text));
+  else if (platform === 'x') window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text));
+  else if (platform === 'instagram') { navigator.clipboard.writeText(text); showToast('Copied! Instagram story pe daal do 📸'); }
+  else { navigator.clipboard.writeText(text); showToast('Link copied! 🔗'); }
+}
+
+// ════════════════════════════════
+//  TOAST
+// ════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ════════════════════════════════
+//  CONFIRM DIALOG
+// ════════════════════════════════
+function showConfirm(msg, onConfirm) {
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:flex;align-items:flex-end;';
+  el.innerHTML = `
+    <div style="width:100%;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid var(--b2);padding:20px 20px calc(env(safe-area-inset-bottom,0px)+24px);animation:slideUp 0.3s var(--ease-out)">
+      <div style="width:36px;height:4px;background:var(--b3);border-radius:2px;margin:0 auto 20px;"></div>
+      <div style="font-size:16px;color:var(--t1);line-height:1.6;margin-bottom:20px;">${msg}</div>
+      <button onclick="this.closest('div[style]').remove()" style="width:100%;padding:14px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r-md);font-size:15px;color:var(--t1);cursor:pointer;font-family:inherit;margin-bottom:8px;">Nahi Nahi 🙅</button>
+      <button id="confirmYes" style="width:100%;padding:14px;background:var(--red);border:none;border-radius:var(--r-md);font-size:15px;color:#fff;font-weight:700;cursor:pointer;font-family:inherit;">Haan, Reset Karo</button>
+    </div>`;
+  document.body.appendChild(el);
+  el.querySelector('#confirmYes').onclick = () => { el.remove(); onConfirm(); };
+  el.onclick = (e) => { if (e.target === el) el.remove(); };
+}
+</script>
+</body>
+</html>
